@@ -120,12 +120,56 @@ async def analyze_code(request: AnalyzeRequest, x_gemini_key: Optional[str] = He
     """
 
     try:
-        # Request a structured JSON response matching our AnalysisResponse Pydantic model
+        # Flat schema dictionary to prevent Gemini "Unknown field for Schema: allOf" error
+        analysis_schema = {
+            "type": "object",
+            "properties": {
+                "complexity": {
+                    "type": "object",
+                    "properties": {
+                        "time": {"type": "string", "description": "The Big-O time complexity class, e.g., O(1), O(log N), O(N), O(N log N), O(N^2), O(2^N)."},
+                        "space": {"type": "string", "description": "The Big-O space complexity class, e.g., O(1), O(N)."},
+                        "explanation": {"type": "string", "description": "Detailed step-by-step breakdown of how the complexities were determined."}
+                    },
+                    "required": ["time", "space", "explanation"]
+                },
+                "bugs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "line": {"type": "integer", "description": "The line number where the issue or bug is located (1-indexed). Use 0 if it applies to the whole code."},
+                            "severity": {"type": "string", "description": "Severity of the issue: 'critical' (breaks code), 'warning' (bad practice/potential bug), or 'info' (convention/style)."},
+                            "description": {"type": "string", "description": "Description of what is wrong."},
+                            "fix": {"type": "string", "description": "Suggested correction or code snippet to fix the issue."}
+                        },
+                        "required": ["line", "severity", "description", "fix"]
+                    }
+                },
+                "improvements": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "description": {"type": "string", "description": "Explanation of what performance or style improvement can be made."},
+                            "before_snippet": {"type": "string", "description": "Original code block to be improved."},
+                            "after_snippet": {"type": "string", "description": "Optimized or improved code block."},
+                            "impact": {"type": "string", "description": "The impact of this optimization: 'high', 'medium', or 'low'."}
+                        },
+                        "required": ["description", "before_snippet", "after_snippet", "impact"]
+                    }
+                },
+                "refactored_code": {"type": "string", "description": "The fully refactored, clean, and bug-free version of the complete code snippet."}
+            },
+            "required": ["complexity", "bugs", "improvements", "refactored_code"]
+        }
+
+        # Request a structured JSON response matching our custom flat schema
         response = model.generate_content(
             prompt,
             generation_config=genai.GenerationConfig(
                 response_mime_type="application/json",
-                response_schema=AnalysisResponse,
+                response_schema=analysis_schema,
                 temperature=0.2, # Low temperature for accurate, analytical results
             )
         )
