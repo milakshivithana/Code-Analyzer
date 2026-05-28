@@ -533,6 +533,7 @@ export default function CodeAnalyzerPage() {
                   </div>
                   <p className={styles.explanationText}>{analysis.complexity.explanation}</p>
                 </div>
+                </div>
               )}
 
               {/* TAB 2: BUGS & ISSUES LOG */}
