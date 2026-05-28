@@ -27,7 +27,7 @@ interface TimeComplexity {
 }
 
 interface Bug {
-  line: int;
+  line: number;
   severity: "critical" | "warning" | "info";
   description: string;
   fix: string;
@@ -376,7 +376,8 @@ export default function CodeAnalyzerPage() {
               </Tabs.List>
 
               {/* TAB 1: DYNAMIC COMPLEXITY GRAPH & DETAILS */}
-              <Tabs.Content value="complexity" className={styles.tabContent}>
+              {activeTab === "complexity" && (
+                <div className={styles.tabContent}>
                 <div className={styles.complexityCards}>
                   <div className={styles.metricCard}>
                     <Activity size={24} className={styles.metricIcon} />
@@ -532,10 +533,12 @@ export default function CodeAnalyzerPage() {
                   </div>
                   <p className={styles.explanationText}>{analysis.complexity.explanation}</p>
                 </div>
-              </Tabs.Content>
+                </div>
+              )}
 
               {/* TAB 2: BUGS & ISSUES LOG */}
-              <Tabs.Content value="bugs" className={styles.tabContent}>
+              {activeTab === "bugs" && (
+                <div className={styles.tabContent}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "#fff" }}>Detected Code Anomalies</h3>
                   <span style={{ fontSize: "0.8rem", color: "hsl(var(--text-muted))" }}>
@@ -568,7 +571,7 @@ export default function CodeAnalyzerPage() {
                               bug.severity === "critical" 
                                 ? styles.badgeCritical 
                                 : bug.severity === "warning" 
-                                : styles.badgeWarning 
+                                ? styles.badgeWarning 
                                 : styles.badgeInfo
                             }`}>
                               {bug.severity}
@@ -594,10 +597,12 @@ export default function CodeAnalyzerPage() {
                     ))}
                   </div>
                 )}
-              </Tabs.Content>
+                </div>
+              )}
 
               {/* TAB 3: BEFORE/AFTER CODE DIFF IMPROVEMENTS */}
-              <Tabs.Content value="refactoring" className={styles.tabContent}>
+              {activeTab === "refactoring" && (
+                <div className={styles.tabContent}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "#fff" }}>Refactoring & Performance Improvements</h3>
                   <span style={{ fontSize: "0.8rem", color: "hsl(var(--text-muted))" }}>
@@ -661,10 +666,12 @@ export default function CodeAnalyzerPage() {
                     {analysis.refactored_code}
                   </pre>
                 </div>
-              </Tabs.Content>
+                </div>
+              )}
 
               {/* TAB 4: INTERACTIVE AI CHAT ASSISTANT */}
-              <Tabs.Content value="chat" className={styles.tabContent}>
+              {activeTab === "chat" && (
+                <div className={styles.tabContent}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "#fff" }}>Algorithmic Dialogue Terminal</h3>
                   <p style={{ fontSize: "0.8rem", color: "hsl(var(--text-muted))" }}>
@@ -734,7 +741,8 @@ export default function CodeAnalyzerPage() {
                     </button>
                   </form>
                 </div>
-              </Tabs.Content>
+                </div>
+              )}
             </Tabs.Root>
           )}
         </section>
