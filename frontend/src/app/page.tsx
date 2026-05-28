@@ -27,7 +27,7 @@ interface TimeComplexity {
 }
 
 interface Bug {
-  line: int;
+  line: number;
   severity: "critical" | "warning" | "info";
   description: string;
   fix: string;
@@ -568,7 +568,7 @@ export default function CodeAnalyzerPage() {
                               bug.severity === "critical" 
                                 ? styles.badgeCritical 
                                 : bug.severity === "warning" 
-                                : styles.badgeWarning 
+                                ? styles.badgeWarning 
                                 : styles.badgeInfo
                             }`}>
                               {bug.severity}
