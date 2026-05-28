@@ -98,8 +98,8 @@ async def analyze_code(request: AnalyzeRequest, x_gemini_key: Optional[str] = He
     if not request.code.strip():
         raise HTTPException(status_code=400, detail="Code snippet cannot be empty.")
 
-    # Select the model (using modern recommended gemini-1.5-flash for speed and reliability)
-    model = ai_client.GenerativeModel("gemini-1.5-flash")
+    # Select the model (using modern recommended gemini-2.5-flash for speed and reliability)
+    model = ai_client.GenerativeModel("gemini-2.5-flash")
 
     # Build prompt
     prompt = f"""
@@ -213,7 +213,7 @@ async def chat_about_code(request: ChatRequest, x_gemini_key: Optional[str] = He
 
     # Initialize model
     model = ai_client.GenerativeModel(
-        "gemini-1.5-flash",
+        "gemini-2.5-flash",
         system_instruction=(
             f"You are an expert programming assistant. You are helping a developer analyze, debug, "
             f"and improve this code snippet written in {request.language}:\n"
